@@ -64,6 +64,7 @@ pipeline {
                 docker rmi ksy99/spring-petclinic:latest
                 '''
             }
+        }
         
         stage('SSH Publish') {
             steps {
