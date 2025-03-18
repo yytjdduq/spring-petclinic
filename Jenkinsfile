@@ -57,7 +57,7 @@ pipeline {
             }
         }
         // Remover Docker Image
-        stage ('Remove Docker Image')
+        stage ('Remove Docker Image') {
             steps {
                 sh '''
                 docker rmi spring-petclinic:$BUILD_NUMBER
@@ -89,4 +89,5 @@ pipeline {
                 useWorkspaceInPromotion: false, verbose: false)])
             }
         }
+    }
 }
