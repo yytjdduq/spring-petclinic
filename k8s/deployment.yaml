@@ -2,10 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spring-petclinic
+  namespace: default
   labels:
     app: spring-petclinic
 spec:
-  replicas: 3  # 2개의 Pod을 생성하여 3노드에 분산 배포
+  replicas: 3  # 3개의 레플리카 설정
   selector:
     matchLabels:
       app: spring-petclinic
@@ -15,28 +16,21 @@ spec:
         app: spring-petclinic
     spec:
       containers:
-      - name: spring-petclinic
-        image: ksy99/spring-petclinic:latest
+      - name: petclinic
+        image: ksy99/spring-petclinic:latest  # Docker Hub에 업로드된 이미지
         ports:
         - containerPort: 8080
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: spring-petclinic-service
+  namespace: default
 spec:
-  type: NodePort  # 온프레미스 환경에서 외부 노출을 위해 NodePort 사용
+  type: LoadBalancer  # 외부 접근을 위한 LoadBalancer 설정
   selector:
     app: spring-petclinic
   ports:
-    - port: 8080       # 서비스가 노출할 포트
-      targetPort: 8080  # 컨테이너 내부 포트
-      nodePort: 30080   # 각 노드의 30080 포트로 접근 가능 (원하는 포트로 지정 가능)
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
