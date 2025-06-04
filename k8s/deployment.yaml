@@ -5,7 +5,7 @@ metadata:
   labels:
     app: spring-petclinic
 spec:
-  replicas: 2  # 2개의 Pod을 생성하여 3노드에 분산 배포
+  replicas: 3  # 2개의 Pod을 생성하여 3노드에 분산 배포
   selector:
     matchLabels:
       app: spring-petclinic
@@ -26,3 +26,17 @@ spec:
           limits:
             cpu: "500m"
             memory: "512Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-petclinic-service
+spec:
+  type: NodePort  # 온프레미스 환경에서 외부 노출을 위해 NodePort 사용
+  selector:
+    app: spring-petclinic
+  ports:
+    - port: 8080       # 서비스가 노출할 포트
+      targetPort: 8080  # 컨테이너 내부 포트
+      nodePort: 30080   # 각 노드의 30080 포트로 접근 가능 (원하는 포트로 지정 가능)
