@@ -6,6 +6,9 @@ metadata:
   labels:
     release: prometheus  # Prometheus Operator가 인식할 라벨
 spec:
+  namespaceSelector:
+    matchNames:
+      - default
   selector:
     matchLabels:
       app: spring-petclinic  # Service의 metadata.labels와 일치
