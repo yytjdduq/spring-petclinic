@@ -16,7 +16,7 @@ spec:
         app: spring-petclinic
     spec:
       containers:
-      - name: petclinic
+      - name: spring-petclinic
         image: ksy99/spring-petclinic:latest  # Docker Hub에 업로드된 이미지
         ports:
         - containerPort: 8080
@@ -26,6 +26,8 @@ kind: Service
 metadata:
   name: spring-petclinic-service
   namespace: default
+  labels:
+    app: spring-petclinic
 spec:
   type: LoadBalancer  # 외부 접근을 위한 LoadBalancer 설정
   selector:
