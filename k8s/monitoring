@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: spring-petclinic-monitor
+  namespace: default  # Service와 동일한 네임스페이스
+  labels:
+    release: prometheus  # Prometheus Operator가 인식할 라벨
+spec:
+  selector:
+    matchLabels:
+      app: spring-petclinic  # Service의 metadata.labels와 일치
+  endpoints:
+  - port: http  # Service의 ports.name과 일치하도록 설정 (이름이 없으므로 임의로 지정)
+    path: /actuator/prometheus  # Spring Boot의 Prometheus 메트릭 엔드포인트
+    interval: 15s  # 메트릭 수집 주기
