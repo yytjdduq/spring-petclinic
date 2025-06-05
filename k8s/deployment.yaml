@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: spring-petclinic
-        image: ksy99/spring-petclinic:latest  # Docker Hub에 업로드된 이미지
+        image: ksy99/spring-petclinic-prometheus:latest  # Docker Hub에 업로드된 이미지
         ports:
         - containerPort: 8080
 ---
