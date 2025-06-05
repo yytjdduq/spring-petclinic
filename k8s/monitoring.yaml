@@ -2,13 +2,13 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: spring-petclinic-monitor
-  namespace: monitoring  # Service와 동일한 네임스페이스
+  namespace: default  # Service와 동일한 네임스페이스
   labels:
     release: prometheus  # Prometheus Operator가 인식할 라벨
 spec:
   namespaceSelector:
     matchNames:
-      - monitoring
+      - default
   selector:
     matchLabels:
       app: spring-petclinic  # Service의 metadata.labels와 일치
