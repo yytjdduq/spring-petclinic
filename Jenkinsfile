@@ -7,9 +7,9 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerCredential')
+        DOCKERHUB_CREDENTIALS = credentials('ksy-docker')
         REGION = "ap-northeast-2"
-        AWS_CREDENTIALS_NAME = "AWSCredentials"
+        AWS_CREDENTIALS_NAME = "project4-aws-credentials"
     }
     
     stages {
@@ -59,12 +59,39 @@ pipeline {
             }
         }
         // Remover Docker Image
-        stage ('Remove Docker Image') {
+        stage('Remove Docker Image') {
             steps {
                 sh '''
                 docker rmi spring-petclinic:$BUILD_NUMBER
                 docker rmi ksy99/spring-petclinic:latest
                 '''
+            }
+        }
+        stage('Upload S3') {
+            steps {
+                echo "Upload to S3"
+                dir("${env.WORKSPACE}") {
+                    sh 'zip -r scripts.zip ./scripts appspec.yml'
+                    withAWS(region:"${REGION}", credentials:"${AWS_CREDENTIALS_NAME}"){
+                        s3Upload(file:"scripts.zip", bucket:"project4-bucket-tg")
+                    }
+                    sh 'rm -rf ./scripts.zip' 
+                }
+            }
+        }
+        stage('Codedeploy Workload') {
+            steps {
+                echo "Codedeploy Workload"   
+                withAWS(region:"${REGION}", credentials:"${AWS_CREDENTIALS_NAME}"){
+                    sh '''
+                    aws deploy create-deployment --application-name project4-application \
+                    --deployment-config-name CodeDeployDefault.OneAtATime \
+                    --deployment-group-name project4-production-in_place \
+                    --ignore-application-stop-failures \
+                    --s3-location bucket=project4-bucket-tg,bundleType=zip,key=scripts.zip
+                    '''
+                }
+                sleep(10) // sleep 10s
             }
         }
     }
