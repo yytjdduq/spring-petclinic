@@ -13,8 +13,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 0    # 배포 중 항상 모든 파드가 살아있게 함 (서비스 무중단)
-      maxSurge: 1          # 새 파드는 1개씩 추가
+      maxUnavailable: 1    # 기존 파드 중 하나를 종료한 후 새 파드생성 (파드 3개 유지)
+      maxSurge: 0          # 새로운 파드 추가 X
   template:
     metadata:
       labels:
