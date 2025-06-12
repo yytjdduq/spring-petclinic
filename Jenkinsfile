@@ -17,7 +17,7 @@ pipeline {
             steps {
                 echo 'Git Clone'
                 git url: 'https://github.com/yytjdduq/spring-petclinic.git',
-                    branch: 'main'
+                    branch: 'aws-branch'
             }
             post {
                 success {
