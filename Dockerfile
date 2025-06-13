@@ -3,3 +3,5 @@ ARG JAR_PATH=target/*.jar
 COPY ${JAR_PATH} spring-petclinic.jar
 EXPOSE 8080
 CMD ["java", "-jar", "spring-petclinic.jar"]
+COPY src/main/resources/application.properties /app/config/
+
